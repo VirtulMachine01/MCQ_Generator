@@ -2,3 +2,7 @@ langchain
 streamlit
 python-dotenv
 PyPDF2
+setuptools
+
+
+-e . # python setup.py install to install local package , this line go in the folder check for the setup.py and execute it in backend
