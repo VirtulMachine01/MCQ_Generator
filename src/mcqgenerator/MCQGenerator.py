@@ -58,20 +58,16 @@ quiz_generation_prompt = PromptTemplate(
     input_variables = ["text", "number", "subject", "tone", "response_json"],
     template = template
 )
-
-# Creating the LLMChain for input prompt1
+# from langchain_core.runnables import RunnableSequence
+from langchain_core.output_parsers import StrOutputParser
 # hf_pipeline = HuggingFacePipeline(pipeline=llm)
-# output_key = "quiz",
 
-# from langchain_core.output_parsers import StrOutputParser
-# quiz_chain = quiz_generation_prompt | hf_pipeline | StrOutputParser()
-
-quiz_chain = LLMChain(
-    llm = HuggingFacePipeline(pipeline=llm),
-    prompt = quiz_generation_prompt,
-    output_key = "quiz",
-    verbose = True
-)
+# quiz_chain = LLMChain(
+#     llm = llm,
+#     prompt = quiz_generation_prompt,
+#     output_key = "quiz",
+#     verbose = True
+# )
 
 # Designingthe prompt template 2 for evaluating the quiz
 template2="""
@@ -89,23 +85,20 @@ quiz_evaluation_prompt = PromptTemplate(
     input_variables=["subject", "quiz"],
     template=template2
 )
-
-# Creating the LLMChain for input prompt2
-# output_key = "review"
-# review_chain = hf_pipeline | quiz_evaluation_prompt | output_key
-
-review_chain = LLMChain(
-    llm = HuggingFacePipeline(pipeline = llm), 
-    prompt = quiz_evaluation_prompt, 
-    output_key = "review",
-    verbose = True
-)
+# review_chain = LLMChain(
+#     llm = llm, 
+#     prompt = quiz_evaluation_prompt, 
+#     output_key = "review",
+#     verbose = True
+# )
 
 # Combining the both chain of quiz generation chain and quiz evaluation chian
-generate_evaluate_chain = SequentialChain(
-    chains=[quiz_chain, review_chain],
-    input_variables=["text", "number", "subject", "tone", "response_json"],
-    output_variables=["quiz", "review"],
-    verbose=True
-)
+# generate_evaluate_chain = SequentialChain(
+#     chains=[quiz_chain, review_chain],
+#     input_variables=["text", "number", "subject", "tone", "response_json"],
+#     output_variables=["quiz", "review"],
+#     verbose=True
+# )
+
+generate_evaluate_chain = quiz_generation_prompt | llm | StrOutputParser() | quiz_evaluation_prompt | llm | StrOutputParser()
 
