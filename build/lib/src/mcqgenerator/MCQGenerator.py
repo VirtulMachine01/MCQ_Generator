@@ -101,3 +101,4 @@ quiz_evaluation_prompt = PromptTemplate(
 # )
 
 generate_evaluate_chain = quiz_generation_prompt | llm | StrOutputParser() | quiz_evaluation_prompt | llm | StrOutputParser()
+
